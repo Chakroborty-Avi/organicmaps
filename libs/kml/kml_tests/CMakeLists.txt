@@ -5,6 +5,7 @@ set(SRC
   minzoom_quadtree_tests.cpp
   serdes_tests.cpp
   tests_data.hpp
+  geojson_tests.cpp
 )
 
 omim_add_test(${PROJECT_NAME} ${SRC})
