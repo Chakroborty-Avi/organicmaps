@@ -8,11 +8,11 @@ final class PlacePageOSMContributionViewController: UIViewController {
 
   private enum Constants {
     static let horizontalPadding: CGFloat = 16
-    static let headerTopPadding: CGFloat = 8
+    static let headerTopPadding: CGFloat = 12
     static let headerHeight: CGFloat = 24
     static let buttonsHeight: CGFloat = 44
     static let headerSpacing: CGFloat = 16
-    static let buttonsTopSpacing: CGFloat = 16
+    static let buttonsTopSpacing: CGFloat = 12
     static let buttonsBottomPadding: CGFloat = 16
     static let buttonsSpacing: CGFloat = 12
   }
