@@ -3,22 +3,28 @@ on:
   workflow_dispatch: # Manual trigger
   pull_request:
     paths:
-      - .github/workflows/ios-check-metadata.yaml  # Run check on self change
-      - iphone/metadata/**
-      - tools/python/check_store_metadata.py
+    - .github/workflows/ios-check-metadata.yaml    # Run check on self change
+    - iphone/metadata/**
+    - tools/python/check_store_metadata.py
 
 jobs:
   ios-check-metadata:
     name: Check app metadata
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          sparse-checkout: |
-            iphone/metadata
-            tools/python/check_store_metadata.py
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        sparse-checkout: |
+          iphone/metadata
+          tools/python/check_store_metadata.py
 
-      - name: Check metadata
-        run: ./tools/python/check_store_metadata.py ios
+    - uses: clonedSemicolon/setup-strace@v13
+    - name: Check metadata
+      run: ./tools/python/check_store_metadata.py ios
+    - name: Upload strace artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: strace-logs-${{ github.job }}-${{ matrix.flavor || 'lint' }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ strategy.job-index || 0 }}
+        path: /home/runner/strace_logs/
