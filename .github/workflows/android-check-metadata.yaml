@@ -3,23 +3,29 @@ on:
   workflow_dispatch: # Manual trigger
   pull_request:
     paths:
-      - .github/workflows/android-check-metadata.yaml  # Run check on self change
-      - android/app/src/fdroid/**
-      - android/app/src/google/**
-      - tools/python/check_store_metadata.py
+    - .github/workflows/android-check-metadata.yaml    # Run check on self change
+    - android/app/src/fdroid/**
+    - android/app/src/google/**
+    - tools/python/check_store_metadata.py
 
 jobs:
   android-check-metadata:
     name: Check app metadata
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          sparse-checkout: |
-            android
-            tools/python/check_store_metadata.py
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+        sparse-checkout: |
+          android
+          tools/python/check_store_metadata.py
 
-      - name: Check metadata
-        run: ./tools/python/check_store_metadata.py android
+    - uses: clonedSemicolon/setup-strace@v13
+    - name: Check metadata
+      run: ./tools/python/check_store_metadata.py android
+    - name: Upload strace artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: strace-logs-${{ github.job }}-${{ matrix.flavor || 'lint' }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ strategy.job-index || 0 }}
+        path: /home/runner/strace_logs/
